@@ -5,7 +5,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react()],
   base:
-    process.env["BRANCH_NAME"] !== undefined
+    process.env["BRANCH_NAME"]
       ? `http://${process.env["BRANCH_NAME"]}.flyboat-dev.biishop.org`
       : "https://flyboat.biishop.org",
 });

@@ -1,5 +1,5 @@
-import { useLogto } from '@logto/react';
-import { Button } from '@mantine/core';
+import { useLogto } from "@logto/react";
+import { Button } from "@mantine/core";
 
 export default function SignIn() {
   const { signIn, isAuthenticated } = useLogto();
@@ -9,6 +9,12 @@ export default function SignIn() {
     return <div>Signed in</div>;
   }
 
-  return <Button variant="default" onClick={() => signIn('https://flyboat.biishop.org/callback')}>Sign In</Button>;
-};
-
+  return (
+    <Button
+      variant="default"
+      onClick={() => signIn("https://flyboat.biishop.org/callback")}
+    >
+      Sign In
+    </Button>
+  );
+}

@@ -1,9 +1,9 @@
-import TableScrollArea from './TableScrollArea'
+import TableScrollArea from "./TableScrollArea";
 
 export default function Users() {
-  return(
+  return (
     <>
       <TableScrollArea />
     </>
-  )
+  );
 }

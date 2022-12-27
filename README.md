@@ -1,4 +1,4 @@
-# vite-project
+# frontend
 
 ## Name
 FlyBoat Static Site

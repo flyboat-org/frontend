@@ -3,7 +3,7 @@ on:
   push:
     branches-ignore:
       - main
-  pull_request:
+  pull_request_target:
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
       - name: Deploy to Staging
         id: deploy
         run: |
-          curl -X 'POST' \
+          curl -X 'POST' --fail-with-body \
           'https://flyboat-dev.biishop.org/' \
           -H 'accept: application/json' \
           -H 'Content-Type: multipart/form-data' \

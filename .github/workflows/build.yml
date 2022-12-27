@@ -51,7 +51,7 @@ jobs:
         run: npm run build
         if: ${{ github.ref != 'refs/heads/main' }}
         env:
-          BRANCH_NAME: ${{ jobs.determine-name.outputs.BRANCH_NAME }}
+          BRANCH_NAME: ${{ env.BRANCH_NAME }}
 
       - name: Build
         run: npm run build

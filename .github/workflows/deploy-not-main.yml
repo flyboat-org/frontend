@@ -20,6 +20,7 @@ jobs:
         with:
           name: build
           path: dist
+      - run: echo ${{ github.event_name }} ${{ github.ref }} ${{ github.sha }}
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request_target'
         shell: bash

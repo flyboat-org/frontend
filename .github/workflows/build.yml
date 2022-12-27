@@ -5,8 +5,6 @@ on:
 
 jobs:
   determine-name:
-    outputs:
-      BRANCH_NAME: ${{ steps.set-name.outputs.BRANCH_NAME }}
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name (merge)
@@ -17,10 +15,14 @@ jobs:
         if: github.event_name == 'pull_request'
         shell: bash
         run: echo "BRANCH_NAME=pr-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
-      - name: Set name
-        id: set-name
-        shell: bash
-        run: echo "BRANCH_NAME=${{ env.BRANCH_NAME }}" >> $GITHUB_OUTPUT
+      - if: ${{ github.ref != 'refs/heads/main' }}
+        run: |
+          echo ${{ env.BRANCH_NAME }} > branch-name.txt
+      - uses: actions/upload-artifact@v3
+        if: ${{ github.ref != 'refs/heads/main' }}
+        with:
+          name: branch-name
+          path: branch-name.txt
   build:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +35,17 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        
+      - name: Get branch name
+        if: ${{ github.ref != 'refs/heads/main' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: branch-name
+      
+      - run: |
+          if [ -f branch-name/branch-name.txt ]; then
+            echo "BRANCH_NAME=$(cat branch-name/branch-name.txt)" >> $GITHUB_ENV
+          fi
 
       - name: Build
         run: npm run build
@@ -40,20 +53,6 @@ jobs:
         env:
           BRANCH_NAME: ${{ jobs.determine-name.outputs.BRANCH_NAME }}
 
-      - if: ${{ github.ref != 'refs/heads/main' }}
-        run: |
-          echo ${{ env.BRANCH_NAME }} > branch-name.txt
-
       - name: Build
         run: npm run build
         if: ${{ github.ref == 'refs/heads/main' }}
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: build
-          path: dist
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: branch-name
-          path: branch-name.txt

@@ -31,7 +31,7 @@ jobs:
       - name: Build zip
         run: |
           cd dist
-          zip -r ${{ env.BRANCH_NAME }}.github-dev.zip *
+          zip -r ../${{ env.BRANCH_NAME }}.github-dev.zip *
       - name: Deploy to Staging
         id: deploy
         run: |

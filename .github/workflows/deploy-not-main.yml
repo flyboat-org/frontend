@@ -1,52 +1,63 @@
 name: Deploy Staging
 on:
-  push:
+  workflow_run:
+    types:
+      - completed
+    workflows:
+      - Build
     branches-ignore:
       - main
-      - dependabot/**
-  pull_request_target:
+
 
 jobs:
-  determine-name:
-    outputs:
-      BRANCH_NAME: ${{ steps.set-name.outputs.BRANCH_NAME }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Get branch name (merge)
-        if: github.event_name != 'pull_request_target'
-        shell: bash
-        run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
-      - name: Get branch name (pull request)
-        if: github.event_name == 'pull_request_target'
-        shell: bash
-        run: echo "BRANCH_NAME=pr-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
-      - name: Set name
-        id: set-name
-        shell: bash
-        run: echo "BRANCH_NAME=${{ env.BRANCH_NAME }}" >> $GITHUB_OUTPUT
-
-  build:
-    needs: determine-name
-    uses: ./.github/workflows/build.yml
-    with:
-      BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
   deploy:
-    needs: [determine-name, build]
     runs-on: ubuntu-latest
     environment:
       name: staging
       url: ${{ steps.deploy.outputs.NEW_URL }}
     env:
-      BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+      BRANCH_NAME: ${{ steps.determine-name.outputs.BRANCH_NAME }}
     concurrency:
-      group: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+      group: ${{ steps.determine-name.outputs.BRANCH_NAME }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
+      - id: determine-name
+        name: Determine name
+        uses: actions/github-script@v6
         with:
-          name: build
-          path: dist
+          script: |
+            const execSync = require('child_process').execSync;
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "build"
+            })[0];
+            let branchNameArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "branch-name"
+            })[0];
+            let download = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: matchArtifact.id,
+               archive_format: 'zip',
+            });
+            let download2 = await github.rest.actions.downloadArtifact({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               artifact_id: branchNameArtifact,
+               archive_format: 'zip',
+            });
+            let fs = require('fs');
+            fs.writeFileSync(`build.zip`, Buffer.from(download.data));
+            fs.writeFileSync(`branch-name.zip`, Buffer.from(download2.data));
+            execSync(`unzip build.zip -d dist`);
+            execSync(`unzip branch-name.zip`);
+            let branchName = fs.readFileSync('branch-name.txt', 'utf8');
+            fs.appendFileSync(process.env.GITHUB_ENV, "BRANCH_NAME=" + branchName + "\n");
+      - uses: actions/checkout@v3
       - name: Build zip
         run: |
           cd dist

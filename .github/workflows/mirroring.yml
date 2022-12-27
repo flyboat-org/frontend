@@ -1,6 +1,7 @@
 name: Mirroring
 
 on: [push, delete]
+if: github.repository == ‘flyboat-org/frontend’
 
 jobs:
   to_gitlab:

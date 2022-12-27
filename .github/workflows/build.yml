@@ -43,6 +43,7 @@ jobs:
           name: branch-name
       
       - run: |
+          ls -l
           if [ -f branch-name/branch-name.txt ]; then
             echo "BRANCH_NAME=$(cat branch-name/branch-name.txt)" >> $GITHUB_ENV
           fi

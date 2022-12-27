@@ -4,6 +4,7 @@ on: [push, delete]
 
 jobs:
   to_gitlab:
+    if: github.repository == ‘flyboat-org/frontend’
     concurrency:
       group: mirroring
       cancel-in-progress: true

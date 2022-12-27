@@ -3,7 +3,7 @@ on:
   push:
     branches-ignore:
       - main
-  pull_request_target:
+  pull_request_target_target:
 
 jobs:
   build:
@@ -21,13 +21,13 @@ jobs:
           name: build
           path: dist
       - name: Get branch name (merge)
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request_target'
         shell: bash
         run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
       - name: Get branch name (pull request)
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         shell: bash
-        run: echo "BRANCH_NAME=pr-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+        run: echo "BRANCH_NAME=pr-$(jq --raw-output .pull_request_target.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
       - name: Build zip
         run: |
           cd dist
@@ -43,7 +43,7 @@ jobs:
           -F 'data=@${{ env.BRANCH_NAME }}.flyboat-dev.zip'
           echo "NEW_URL=http://${{ env.BRANCH_NAME }}.flyboat-dev.biishop.org" >> $GITHUB_OUTPUT
       - name: Leave comment
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request_target'
         uses: thollander/actions-comment-pull-request@v2
         with:
           message: |

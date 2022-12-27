@@ -12,7 +12,7 @@ export default function SignIn() {
   return (
     <Button
       variant="default"
-      onClick={() => signIn("https://flyboat.biishop.org/callback")}
+      onClick={() => signIn(`${location.origin}/callback`)}
     >
       Sign In
     </Button>

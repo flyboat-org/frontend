@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    uses: ./.github/workflows/build.yml@main
+    uses: ./.github/workflows/build.yml
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -18,4 +18,4 @@ jobs:
           name: build
           path: dist
       - name: Deploy to Staging
-        run: ls -l distT
+        run: ls -l dist

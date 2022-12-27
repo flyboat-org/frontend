@@ -6,21 +6,11 @@ on:
   pull_request_target:
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
-  deploy:
-    needs: build
+  determine-name:
+    outputs:
+      BRANCH_NAME: ${{ steps.set-name.outputs.BRANCH_NAME }}
     runs-on: ubuntu-latest
-    environment:
-      name: staging
-      url: ${{ steps.deploy.outputs.NEW_URL }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
-        with:
-          name: build
-          path: dist
-      - run: echo ${{ github.event_name }} ${{ github.ref }} ${{ github.sha }}
       - name: Get branch name (merge)
         if: github.event_name != 'pull_request_target'
         shell: bash
@@ -29,6 +19,30 @@ jobs:
         if: github.event_name == 'pull_request_target'
         shell: bash
         run: echo "BRANCH_NAME=pr-$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")" >> $GITHUB_ENV
+      - name: Set name
+        id: set-name
+        shell: bash
+        run: echo "BRANCH_NAME=${{ env.BRANCH_NAME }}" >> $GITHUB_OUTPUT
+
+  build:
+    needs: determine-name
+    uses: ./.github/workflows/build.yml
+    with:
+      BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+  deploy:
+    needs: [determine-name, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.NEW_URL }}
+    env:
+      BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v2
+        with:
+          name: build
+          path: dist
       - name: Build zip
         run: |
           cd dist

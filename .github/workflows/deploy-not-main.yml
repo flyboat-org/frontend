@@ -16,12 +16,12 @@ jobs:
       name: staging
       url: ${{ steps.deploy.outputs.NEW_URL }}
     env:
-      BRANCH_NAME: ${{ steps.determine-name.outputs.BRANCH_NAME }}
+      BRANCH_NAME: ${{ steps.determine_name.outputs.BRANCH_NAME }}
     concurrency:
-      group: ${{ steps.determine-name.outputs.BRANCH_NAME }}
+      group: ${{ steps.determine_name.outputs.BRANCH_NAME }}
       cancel-in-progress: true
     steps:
-      - id: determine-name
+      - id: determine_name
         name: Determine name
         uses: actions/github-script@v6
         with:

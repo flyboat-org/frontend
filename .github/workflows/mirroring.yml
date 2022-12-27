@@ -1,10 +1,8 @@
 name: Mirroring
 
 on:
-  push:
-    branches-ignore:
-      - dependabot/**
-  delete:
+  schedule:
+    - cron: '0 9 * * *' 
 
 jobs:
   to_gitlab:

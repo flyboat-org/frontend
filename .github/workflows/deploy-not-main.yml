@@ -38,6 +38,9 @@ jobs:
       url: ${{ steps.deploy.outputs.NEW_URL }}
     env:
       BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+    concurrency:
+      group: ${{ needs.determine-name.outputs.BRANCH_NAME }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3

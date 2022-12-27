@@ -40,7 +40,7 @@ jobs:
       BRANCH_NAME: ${{ needs.determine-name.outputs.BRANCH_NAME }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: build
           path: dist

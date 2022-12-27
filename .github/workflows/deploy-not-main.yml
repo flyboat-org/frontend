@@ -15,9 +15,6 @@ jobs:
     environment:
       name: staging
       url: ${{ steps.deploy.outputs.NEW_URL }}
-    concurrency:
-      group: ${{ steps.determine_name.outputs.BRANCH_NAME }}
-      cancel-in-progress: true
     steps:
       - id: determine_name
         name: Determine name

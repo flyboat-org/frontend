@@ -4,8 +4,7 @@ import { defineConfig } from "vite";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base:
-    process.env["BRANCH_NAME"]
-      ? `http://${process.env["BRANCH_NAME"]}.flyboat-dev.biishop.org`
-      : "https://flyboat.biishop.org",
+  base: process.env["BRANCH_NAME"]
+    ? `http://${process.env["BRANCH_NAME"]}.flyboat-dev.biishop.org`
+    : "https://flyboat.biishop.org",
 });

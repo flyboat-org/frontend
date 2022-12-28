@@ -2,7 +2,7 @@
 
 ## Name
 
-FlyBoat Static Site
+The FlyBoat Static Site
 
 ## Installation
 

@@ -4,7 +4,6 @@ on:
     branches-ignore:
       - main
       - dependabot/**
-  pull_request_target:
 
 jobs:
   determine-name:

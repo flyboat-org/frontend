@@ -6,6 +6,7 @@ on:
         description: "The name of the branch to build."
         required: false
         type: string
+  pull_request:
 
 jobs:
   build:

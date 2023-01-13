@@ -52,7 +52,7 @@ export default function Landing() {
           withNormalizeCSS
         >
           <AppShell header={<HeaderMegaMenu />}>
-            <div style={{ zIndex: -1, position: "absolute" }}>
+            <div style={{ position: "absolute" }}>
               <ParticlesContainer />
             </div>
             <HeroBullets />

@@ -17,7 +17,7 @@
     "@mantine/ds": "^5.10.0",
     "@mantine/hooks": "^5.9.5",
     "@sentry/react": "^7.31.0",
-    "@sentry/tracing": "^7.30.0",
+    "@sentry/tracing": "^7.31.0",
     "@tabler/icons": "^1.119.0",
     "axios": "^1.2.2",
     "localforage": "^1.10.0",

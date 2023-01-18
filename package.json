@@ -27,7 +27,7 @@
     "react-router-dom": "^6.6.2",
     "react-tsparticles": "^2.7.1",
     "tsparticles": "^2.7.1",
-    "tsparticles-preset-links": "^2.7.1"
+    "tsparticles-preset-links": "^2.8.0"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.0.0",

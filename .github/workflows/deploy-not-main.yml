@@ -41,7 +41,7 @@ jobs:
       group: ${{ needs.determine-name.outputs.BRANCH_NAME }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
           name: build

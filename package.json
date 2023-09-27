@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.0",
-    "@logto/react": "^2.0.0",
+    "@logto/react": "^2.1.2",
     "@mantine/core": "^5.9.5",
     "@mantine/ds": "^5.10.5",
     "@mantine/hooks": "^5.9.5",
